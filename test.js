@@ -8,14 +8,31 @@ var winston = require('winston');
 winston.log('info', 'Hello from Winston!');
 winston.info('This also works');
 
-console.log("Welcome to Winston Project");
-hello();
+//console.log("Welcome to Winston Project");
+//hello();
 
 function hello(){
 	console.log("hello world");
-	throw new Error('New Error 890');
+	//throw new Error('New Error 890');
 }
 
+
+var logger = new (winston.Logger)({
+  transports: [
+    new (winston.transports.Console)(),
+    new (winston.transports.File)({ filename: 'somefile.log' })
+  ]
+});
+
+
+logger.log('info', 'Hello distributed log files!');
+  logger.info('Hello again distributed logs');
+
+  //
+  // Adding / Removing Transports
+  //   (Yes It's chainable)
+  //
+ // logger.add(winston.transports.File);
 
 
 
