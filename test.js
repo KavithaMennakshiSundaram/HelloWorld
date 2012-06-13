@@ -1,31 +1,28 @@
-//var airbrake = require('airbrake').createClient("b8612b5afd7ac0a8073213f341d08335");
-//airbrake.handleExceptions();
-
-
 var airbrake = require('airbrake').createClient("4d7491c54a785e0b731ca764d3966d9f");
 airbrake.handleExceptions();
-throw new Error('New Error');
-
-
-
-
-
-
-
-//var Exceptional = require('exceptional-node').Exceptional;
-
-//Exceptional.API_KEY = 'b4e7435031db1d5d42af57783dbdaa9c5c1f1e40';
-
-
-console.log("Welcome to Air brake Project");
-
-
-
 //throw new Error('New Error');
 
 
+var winston = require('winston');
+
+winston.log('info', 'Hello from Winston!');
+winston.info('This also works');
+
+console.log("Welcome to Winston Project");
+hello();
+
+function hello(){
+	console.log("hello world");
+	throw new Error('New Error 890');
+}
 
 
+
+
+////////////////// Tried for airbrake and exceptional error logging
+
+
+//throw new Error('New Error');
 
 /*
 
@@ -42,6 +39,15 @@ airbrake.notify(err, function(err, url) {
     Exceptional.handle(err);
 }); */
 
+
+
+
+//var Exceptional = require('exceptional-node').Exceptional;
+
+//Exceptional.API_KEY = 'b4e7435031db1d5d42af57783dbdaa9c5c1f1e40';
+
+
+/*
 try {
   throw new Error("Test Error 1");
 } catch(error) {
@@ -51,14 +57,12 @@ try {
 
 
 
-hello();
+
 throw new Error("Test Error 2");
 
+*/
 
 
 
 
-function hello(){
-	console.log("hello world");
-	throw new Error('New Error 890');
-}
+
