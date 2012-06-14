@@ -1,83 +1,127 @@
-var airbrake = require('airbrake').createClient("4d7491c54a785e0b731ca764d3966d9f");
-airbrake.handleExceptions();
-//throw new Error('New Error');
-
-
 var winston = require('winston');
-
-winston.log('info', 'Hello from Winston!');
-winston.info('This also works');
-
-//console.log("Welcome to Winston Project");
-//hello();
-
-function hello(){
-	console.log("hello world");
-	//throw new Error('New Error 890');
-}
 
 
 var logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)(),
-    new (winston.transports.File)({ filename: 'somefile.log' })
-  ]
-});
+
+    transports: [
+ 	new (winston.transports.Console)(),
+        new winston.transports.File({ filename: 'LogFile.log' })
+    ],
+    exceptionHandlers: [
+      new winston.transports.File({ filename: 'ErrorLog.log',handleExceptions: true })
+    ]
+
+  });
 
 
-logger.log('info', 'Hello distributed log files!');
-  logger.info('Hello again distributed logs');
+logger.info('This also works');
+logger.exitOnError = false;
+
+
+function ignoreEpipe(err) {
+    return err.code !== 'EPIPE';
+  }
+
+  //var logger = new (winston.Logger)({ exitOnError: ignoreEpipe });
 
   //
-  // Adding / Removing Transports
-  //   (Yes It's chainable)
+  // or, like this:
   //
- // logger.add(winston.transports.File);
+
+  //logger.exitOnError = ignoreEpipe;
 
 
-
-////////////////// Tried for airbrake and exceptional error logging
-
-
-//throw new Error('New Error');
 
 /*
 
-var err = new Error('Something went terribly wrong');
-airbrake.notify(err, function(err, url) {
-  if (err) throw err;
-
-  // Error has been delivered, url links to the error in airbrake
+logger.on('log', function (transport, level, msg, meta) {
+  // [msg] and [meta] have now been logged at [level] to [transport]
+	console.log("Transport :::::::::::::::::::::::::::::::::::"+transport)
 });
+
+
+logger.on('error', function (err) {
+  // handle an error
+
+console.log("err :::::::::::::::::::::::::::::::::::"+err)
+});
+
+//logger.info('CHILL WINSTON! !!!!!!!!!!!!!!!', { seriously: true });
 
 */
-
-/*process.addListener('uncaughtException', function(err) {
-    Exceptional.handle(err);
-}); */
+test();
 
 
+function test(){
 
+conole.log(" inside test method ");
+logger.info(" inside test method ");
+new Error("dkhfjdsh");
 
-//var Exceptional = require('exceptional-node').Exceptional;
-
-//Exceptional.API_KEY = 'b4e7435031db1d5d42af57783dbdaa9c5c1f1e40';
-
-
-/*
-try {
-  throw new Error("Test Error 1");
-} catch(error) {
-  console.log("Error occurred ", error.message);
-  //Exceptional.handle(error);
 }
 
 
 
+////////////////////////////////////////////////// PROFILING
 
-throw new Error("Test Error 2");
+//
+  // Start profile of 'test'
+  // Remark: Consider using Date.now() with async operations
+  //
+  winston.profile('test');
 
-*/
+ winston.profile('test 123');
+
+  setTimeout(function () {
+    //
+    // Stop profile of 'test'. Logging will now take place:
+    //   "17 Jan 21:00:00 - info: test duration=1000ms"
+    //
+    winston.profile('test');
+  }, 1000);
+
+
+/////////////////////////////////////////////////  Querying
+
+var options = {
+    from: new Date - 24 * 60 * 60 * 1000,
+    until: new Date
+  };
+
+  //
+  // Find items logged between today and yesterday.
+  //
+  winston.query(options, function (err, results) {
+    if (err) {
+      throw err;
+    }
+
+    console.log("RESULTS LOGGING ::::::"+results);
+  });
+
+
+///////////////////////////////////////////////////////  Streaming 
+
+ //
+  // Start at the end.
+  //
+  winston.stream({ start: -1 }).on('log', function(log) {
+    console.log("Streaming :::::::::::::::::"+log);
+  });
+
+/////////////////////////////////////////////////// Exception
+
+
+ 
+
+
+
+
+
+
+
+
+
 
 
 
