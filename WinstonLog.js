@@ -1,5 +1,44 @@
-var winston = require('winston')
-require('winston-mongodb').MongoDB
+var winston = require('winston');
+require('winston-mongodb').MongoDB;
+var loggly = require('loggly');
+require('winston-loggly');
+
+/*var client = loggly.createClient({
+    subdomain:'TestLoggly123',
+         inputToken:'934a891c-725d-479a-855e-1a059767c7f',
+          auth: {
+            username: " kavitham",
+            password: "bluebird87*"
+            },
+	inputName:'default'
+}); */
+
+
+ var config = {
+    subdomain:'TestLoggly123',
+         inputToken:'2e86a908-e944-413d-a257-023ae542ecb4',
+          auth: {
+            username: " kavitham",
+            password: "bluebird87*"
+            },
+	inputName:'logglytest'
+  };
+  var client = loggly.createClient(config);
+
+/*client.getInputs(function (err, inputs) {
+  if (err) throw err;
+
+  var input = inputs.filter(function (i) { return i.name === 'default' })[0];
+
+console.log ("client Name "+input.input_token);
+
+});*/
+
+
+
+
+
+
 
 winston.cli();
 
@@ -39,6 +78,7 @@ exitOnError:false,
 }),
     new (winston.transports.File)({
       filename: 'ErrorLog.log',
+	json:true,
       colorize: true
     })
     ],
@@ -67,7 +107,19 @@ exitOnError:false,
       level: 'verbose',
       levels: customLevels.levels,
       handleExceptions: true
-    })
+    }),
+  new (winston.transports.Loggly)({
+         level:'verbose',
+         subdomain:'TestLoggly123',
+	inputName:'logglytest',
+ 	inputToken:'2e86a908-e944-413d-a257-023ae542ecb4',
+          auth: {
+            username: " kavitham",
+            password: "bluebird87*"
+            },
+	json:true
+
+	})
   ]
  
 })
@@ -78,7 +130,7 @@ winston.addColors(customLevels.colors)
 
  logger.cli();
 
-
+/*
 
 var options.formatter = function(level, msg, meta) {
     return {
@@ -88,6 +140,8 @@ var options.formatter = function(level, msg, meta) {
     };
 }
 
+
+*/
 
 
 

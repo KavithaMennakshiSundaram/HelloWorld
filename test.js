@@ -61,7 +61,7 @@ getRecord(res);
 function getRecord(res){
 
 	logger.info("inside  List  :::::::::::");
-	logger.debug("Error  List  :::::::::::");
+	logger.debug("Loggly test :::::::::::::");
 
 
 
