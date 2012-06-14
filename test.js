@@ -25,6 +25,31 @@ app.use(express.bodyParser());
 var userModel = mongoose.model('user',user);
 
 
+var ErrorSchema= new Schema({ 
+          loc                                : {lat: Number,  lng: Number }, 
+          Address                        : String, 
+          create_date                : {type: Date, default: Date.now} 
+}); 
+
+var ErrorSchemaModel = mongoose.model('ErrorSchema',ErrorSchema);
+/*
+ErrorSchemaModel.save(function (err, model) {
+  if (err) 
+{
+console.log("jdhj");
+
+throw err;}
+
+  console.log("My new User is saved",
+    "`save` hook worked as espected since we had no errors here");
+});
+
+
+*/
+
+
+
+
 // Routes
 app.get('/', function(req, res) {
   //saveUser();
@@ -36,12 +61,17 @@ getRecord(res);
 function getRecord(res){
 
 	logger.info("inside  List  :::::::::::");
-       // logger.warning("DB saved record :::::::::::::::"+docs);
+	logger.debug("Error  List  :::::::::::");
+
+
+
+     // logger.error("DB saved record :::::::::::::::"+docs);
+console.log("testing ::::::::::::::");
 	var query = userModel.find({});	
 	query.exec(function (err, docs) {
 
 		if(err){
-			console.log(err);
+			logger.error(err);
 		}else{
 			_.each(docs,function(item){
 						//logger.info("USEr : "+item.firstName)
@@ -71,14 +101,11 @@ function saveUser(){
 
 app.listen(3000);
 
- 
 
 
 
 
-
-
-
+//-------------------------------------------Global Exception handler--------------------------------------------------------------------
 
 
 
