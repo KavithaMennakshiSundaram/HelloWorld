@@ -1,116 +1,73 @@
-var winston = require('winston');
+// Module dependencies.
+var express = require('express');
+var mongoose = require('mongoose');
+var _= require('underscore');
 
+var logger= require('./WinstonLog');
 
-var logger = new (winston.Logger)({
+mongoose.connect('mongodb://localhost:1234/node');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
 
-    transports: [
- 	new (winston.transports.Console)(),
-        new winston.transports.File({ filename: 'LogFile.log' })
-    ],
-    exceptionHandlers: [
-      new winston.transports.File({ filename: 'ErrorLog.log',handleExceptions: true })
-    ]
+var app = express.createServer();
 
-  });
-
-
-logger.info('This also works');
-logger.exitOnError = false;
-
-
-function ignoreEpipe(err) {
-    return err.code !== 'EPIPE';
-  }
-
-  //var logger = new (winston.Logger)({ exitOnError: ignoreEpipe });
-
-  //
-  // or, like this:
-  //
-
-  //logger.exitOnError = ignoreEpipe;
-
-
-
-/*
-
-logger.on('log', function (transport, level, msg, meta) {
-  // [msg] and [meta] have now been logged at [level] to [transport]
-	console.log("Transport :::::::::::::::::::::::::::::::::::"+transport)
+// Configuration
+app.configure( function() {
+app.use(express.bodyParser());
 });
 
 
-logger.on('error', function (err) {
-  // handle an error
+//DataModel
+	var user = new Schema({
+	firstName : String,
+	lastName:String
+});
+var userModel = mongoose.model('user',user);
 
-console.log("err :::::::::::::::::::::::::::::::::::"+err)
+
+// Routes
+app.get('/', function(req, res) {
+  saveUser();
 });
 
-//logger.info('CHILL WINSTON! !!!!!!!!!!!!!!!', { seriously: true });
 
-*/
-test();
+function getRecord(res){
+	logger.info("inside  List  :::::::::::");
+	var query = userModel.find({});	
+	query.exec(function (err, docs) {
 
+		if(err){
+			console.log(err);
+		}else{
 
-function test(){
+			console.warn(docs);
+			_.each(docs,function(item){
+						//logger.info("USEr : "+item.firstName)
+					});
 
-conole.log(" inside test method ");
-logger.info(" inside test method ");
-new Error("dkhfjdsh");
+		res.send(JSON.stringify(docs));
+		}
 
+		
+	});			
 }
 
 
-
-////////////////////////////////////////////////// PROFILING
-
-//
-  // Start profile of 'test'
-  // Remark: Consider using Date.now() with async operations
-  //
-  winston.profile('test');
-
- winston.profile('test 123');
-
-  setTimeout(function () {
-    //
-    // Stop profile of 'test'. Logging will now take place:
-    //   "17 Jan 21:00:00 - info: test duration=1000ms"
-    //
-    winston.profile('test');
-  }, 1000);
+function saveUser(){
 
 
-/////////////////////////////////////////////////  Querying
-
-var options = {
-    from: new Date - 24 * 60 * 60 * 1000,
-    until: new Date
-  };
-
-  //
-  // Find items logged between today and yesterday.
-  //
-  winston.query(options, function (err, results) {
-    if (err) {
-      throw err;
-    }
-
-    console.log("RESULTS LOGGING ::::::"+results);
-  });
+/*var userInstance = new userModel();
+	userInstance.firstName = "kavitha";
+	userInstance.lastName = "m";
+	userInstance.save(function (err) {
+		  logger.log("Save Error::::::::::::"+err);
+		  getRecord(res);
+	});*/
 
 
-///////////////////////////////////////////////////////  Streaming 
+}
 
- //
-  // Start at the end.
-  //
-  winston.stream({ start: -1 }).on('log', function(log) {
-    console.log("Streaming :::::::::::::::::"+log);
-  });
-
-/////////////////////////////////////////////////// Exception
-
+app.listen(3000);
 
  
 
