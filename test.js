@@ -27,20 +27,22 @@ var userModel = mongoose.model('user',user);
 
 // Routes
 app.get('/', function(req, res) {
-  saveUser();
+  //saveUser();
+
+getRecord(res);
 });
 
 
 function getRecord(res){
+
 	logger.info("inside  List  :::::::::::");
+       // logger.warning("DB saved record :::::::::::::::"+docs);
 	var query = userModel.find({});	
 	query.exec(function (err, docs) {
 
 		if(err){
 			console.log(err);
 		}else{
-
-			console.warn(docs);
 			_.each(docs,function(item){
 						//logger.info("USEr : "+item.firstName)
 					});
@@ -61,7 +63,7 @@ function saveUser(){
 	userInstance.lastName = "m";
 	userInstance.save(function (err) {
 		  logger.log("Save Error::::::::::::"+err);
-		  getRecord(res);
+		  
 	});*/
 
 

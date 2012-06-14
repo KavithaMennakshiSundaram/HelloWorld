@@ -25,9 +25,16 @@ var logger = module.exports = new (winston.Logger)({
   //colors: customLevels.colors,
   transports: [
     // setup console logging
-    new (winston.transports.Console)({
+  new (winston.transports.Console)({
       level: 'debug',
       levels: customLevels.levels,
+      //handleExceptions: true,
+      colorize: true
+    }),
+  new (winston.transports.File)({
+      level: 'debug',
+      levels: customLevels.levels,
+      filename: 'LogFile.log',
       handleExceptions: true,
       colorize: true
     }),
@@ -45,3 +52,5 @@ var logger = module.exports = new (winston.Logger)({
 
 // set the coloring
 winston.addColors(customLevels.colors)
+//Change levels on the default winston logger
+winston.setLevels(winston.config.syslog.levels);
