@@ -1,13 +1,18 @@
 var airbrake = require('airbrake').createClient("4d7491c54a785e0b731ca764d3966d9f");
 airbrake.handleExceptions();
-//throw new Error('New Error');
 
+
+//throw new Error('New Error');
 //hello();
+
+
 
 function hello(){
 	console.log("hello world");
 	//throw new Error('New Error 890');
 }
+
+
 
 
 ////////////////// Tried for airbrake and exceptional error logging

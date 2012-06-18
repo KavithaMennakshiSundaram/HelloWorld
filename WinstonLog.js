@@ -3,15 +3,7 @@ require('winston-mongodb').MongoDB;
 var loggly = require('loggly');
 require('winston-loggly');
 
-/*var client = loggly.createClient({
-    subdomain:'TestLoggly123',
-         inputToken:'934a891c-725d-479a-855e-1a059767c7f',
-          auth: {
-            username: " kavitham",
-            password: "bluebird87*"
-            },
-	inputName:'default'
-}); */
+
 
 
  var config = {
@@ -25,17 +17,15 @@ require('winston-loggly');
   };
   var client = loggly.createClient(config);
 
-/*client.getInputs(function (err, inputs) {
-  if (err) throw err;
+var singleBucketTransport = new (Riak)({ bucket: 'some-logs-go-here' });
 
-  var input = inputs.filter(function (i) { return i.name === 'default' })[0];
-
-console.log ("client Name "+input.input_token);
-
-});*/
-
-
-
+ // Generate a dynamic bucket based on the date and level
+  var dynamicBucketTransport = new (Riak)({
+    bucket: function (level, msg, meta, now) {
+      var d = new Date(now);
+      return level + [d.getDate(), d.getMonth(), d.getFullYear()].join('-');
+    }
+  });
 
 
 
@@ -55,7 +45,7 @@ fatal: 5
 colors: {
 trace: "blue",
 debug: "grey",
-info: "white",
+info: "red",
 warn: "magenta",
 error: "red",
 fatal: "red"
@@ -101,10 +91,10 @@ exitOnError:false,
     // setup logging to mongodb
     new (winston.transports.MongoDB)({
       host: 'localhost',
-      db: 'node',
+      db: 'logging',
       port:'1234',
       collection: 'log',
-      level: 'verbose',
+      level: 'debug',
       levels: customLevels.levels,
       handleExceptions: true
     }),
@@ -126,9 +116,17 @@ exitOnError:false,
 
 // set the coloring
 winston.addColors(customLevels.colors)
-
+logger.setLevels(winston.config.syslog.levels);
 
  logger.cli();
+
+
+logger.on('debug', function (transport, level, msg, meta) {
+	console.log("inside logger on");
+  // [msg] and [meta] have now been logged at [level] to [transport]
+});
+
+
 
 /*
 
@@ -178,4 +176,45 @@ mongotransport.on('error', function(err) {
 
 */
 
- 
+
+
+/*client.getInputs(function (err, inputs) {
+  if (err) throw err;
+
+  var input = inputs.filter(function (i) { return i.name === 'default' })[0];
+
+console.log ("client Name "+input.input_token);
+
+});*/
+
+
+
+
+
+
+////////////////////////////////////////////////////////  Loggly
+/*var client = loggly.createClient({
+    subdomain:'TestLoggly123',
+         inputToken:'934a891c-725d-479a-855e-1a059767c7f',
+          auth: {
+            username: " kavitham",
+            password: "bluebird87*"
+            },
+	inputName:'default'
+}); */
+
+
+
+ /////////////////////////////////////  Raik
+
+
+/* var Riak = require('winston-riak').Riak;
+var options ={
+debug:true,
+level:"info"
+}
+
+
+ winston.add(Riak, options);
+
+*/

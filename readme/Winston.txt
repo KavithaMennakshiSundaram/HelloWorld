@@ -1,0 +1,10 @@
+Winston for logging
+-------------------
+
+for integrating logging
+-----------------------
+
+Step 1: Need to create the logging credential using the website http://loggly.com/.They provide subdomain with credentials.
+Step 2: Configure the username,password,inputname and inputkey in winston logging.
+Step 3: We can view the log details in ur loggly account.
+Step 4:

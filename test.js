@@ -3,18 +3,28 @@ var express = require('express');
 var mongoose = require('mongoose');
 var _= require('underscore');
 
+//Winstaon library included
 var logger= require('./WinstonLog');
 
+//Airbrake configuration
+var airbrake = require('airbrake').createClient("4d7491c54a785e0b731ca764d3966d9f");
+airbrake.handleExceptions();
+
+
+//Moongose connection
 mongoose.connect('mongodb://localhost:1234/node');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var app = express.createServer();
+
 
 // Configuration
+var app = express.createServer();
 app.configure( function() {
 app.use(express.bodyParser());
 });
+
+
 
 
 //DataModel
@@ -25,6 +35,7 @@ app.use(express.bodyParser());
 var userModel = mongoose.model('user',user);
 
 
+// Trying to produce error while creating schema
 var ErrorSchema= new Schema({ 
           loc                                : {lat: Number,  lng: Number }, 
           Address                        : String, 
@@ -32,6 +43,8 @@ var ErrorSchema= new Schema({
 }); 
 
 var ErrorSchemaModel = mongoose.model('ErrorSchema',ErrorSchema);
+
+
 /*
 ErrorSchemaModel.save(function (err, model) {
   if (err) 
@@ -53,7 +66,7 @@ throw err;}
 // Routes
 app.get('/', function(req, res) {
   //saveUser();
-
+console.info("Http invoked :::::");
 getRecord(res);
 });
 
